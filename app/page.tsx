@@ -64,7 +64,7 @@ const profiles = [
 
 const steps = [
   { n: "1", label: "Tu choisis ton objectif" },
-  { n: "2", label: "Tu composes ton bowl (skyr, goût, toppings, fruits, bonus)" },
+  { n: "2", label: "Tu composes ton bowl étape par étape" },
   { n: "3", label: "On prépare tout pour toi" },
   { n: "4", label: "Tu reçois ton bowl, prêt à déguster" },
 ];
@@ -116,7 +116,7 @@ export default function Home() {
             <img
               src="https://placehold.co/600x500/F5E6D3/3D2B1F?text=Bowl+Bowlance"
               alt="Un bowl Bowlance appétissant"
-              className="rounded-3xl shadow-lg w-full max-w-sm md:max-w-full object-cover"
+              className="rounded-3xl shadow-lg w-full max-w-xs md:max-w-sm object-cover"
             />
           </div>
         </div>
