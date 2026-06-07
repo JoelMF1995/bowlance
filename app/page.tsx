@@ -84,43 +84,29 @@ export default function Home() {
         }
       `}</style>
 
-      {/* ── SECTION 1 — Hero ───────────────────────────────────────── */}
-      <Section className="bg-gradient-to-b from-cream to-offwhite py-20 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col-reverse md:flex-row items-center gap-12">
-          {/* Texte */}
-          <div className="flex-1 flex flex-col gap-6">
-            <h1 className="font-display text-5xl md:text-6xl font-bold text-brown leading-tight">
-              Le petit-déjeuner<br />qui change tout.
-            </h1>
-            <p className="font-body text-lg text-brown/70 max-w-md leading-relaxed">
-              Un bowl de skyr composé selon tes objectifs. Gourmand,
-              rassasiant, construit pour toi.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="/composer"
-                className="inline-flex items-center justify-center px-8 py-3.5 rounded-xl bg-terracotta text-white font-body font-medium text-lg hover:bg-[#a85d49] transition-colors duration-200"
-              >
-                Composer mon bowl
-              </Link>
-              <Link
-                href="/histoire"
-                className="inline-flex items-center justify-center px-8 py-3.5 rounded-xl border border-sage text-sage font-body font-medium text-lg hover:bg-sage hover:text-white transition-colors duration-200"
-              >
-                Découvrir le concept
-              </Link>
-            </div>
-          </div>
-          {/* Image */}
-          <div className="flex-1 flex justify-center">
-            <img
-              src="https://placehold.co/600x500/F5E6D3/3D2B1F?text=Bowl+Bowlance"
-              alt="Un bowl Bowlance appétissant"
-              className="rounded-3xl shadow-lg w-full max-w-xs md:max-w-sm object-cover"
-            />
-          </div>
+      {/* ── SECTION 1 — Hero plein écran ──────────────────────────── */}
+      <section className="relative h-screen w-full overflow-hidden flex items-end justify-center pb-24 px-6">
+        <img
+          src="/images/eiliv-aceron-NI8MeJiAN3I-unsplash.jpg"
+          alt="Bowl de skyr garni de fruits frais et granola"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/65" />
+        <div className="relative z-10 flex flex-col items-center text-center gap-6 max-w-2xl">
+          <h1 className="font-display text-5xl md:text-6xl font-bold text-white leading-tight">
+            Commence ta transformation
+          </h1>
+          <p className="font-body text-lg md:text-xl text-white/85">
+            Et deviens la meilleure version de toi-même
+          </p>
+          <Link
+            href="/composer"
+            className="inline-flex items-center justify-center px-10 py-4 rounded-full bg-terracotta text-white font-body font-medium text-lg shadow-lg hover:bg-[#a85d49] transition-colors duration-200"
+          >
+            Composer mon bowl
+          </Link>
         </div>
-      </Section>
+      </section>
 
       {/* ── SECTION 2 — Les 3 profils ──────────────────────────────── */}
       <Section className="py-24 px-6 bg-offwhite">
