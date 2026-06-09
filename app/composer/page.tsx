@@ -92,6 +92,7 @@ interface Sel {
   flavor: string;
   crunchy: string;
   fruits: string[];
+  customFruit: string;
   driedFruits: boolean | null;
   darkChoco: boolean | null;
 }
@@ -189,7 +190,7 @@ export default function ComposerPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [sel, setSel] = useState<Sel>({
-    objective: "", mode: "", skyr: "", flavor: "", crunchy: "", fruits: [],
+    objective: "", mode: "", skyr: "", flavor: "", crunchy: "", fruits: [], customFruit: "",
     driedFruits: null, darkChoco: null,
   });
 
@@ -398,6 +399,15 @@ export default function ComposerPage() {
                 );
               })}
             </div>
+            {sel.fruits.includes("autre") && (
+              <input
+                type="text"
+                value={sel.customFruit}
+                onChange={e => setSel(p => ({ ...p, customFruit: e.target.value }))}
+                placeholder="Écris ton fruit ici..."
+                className="w-full rounded-2xl border-2 border-sage/20 bg-white px-5 py-3 font-body text-brown placeholder:text-brown/30 focus:outline-none focus:border-terracotta"
+              />
+            )}
           </div>
         );
 

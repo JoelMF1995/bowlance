@@ -18,6 +18,7 @@ interface Sel {
   flavor: string;
   crunchy: string;
   fruits: string[];
+  customFruit: string;
   driedFruits: boolean | null;
   darkChoco: boolean | null;
 }
@@ -208,7 +209,7 @@ export default function RecapPage() {
           <Row label="Skyr"      value={LABELS[sel.skyr] ?? sel.skyr} />
           {sel.flavor && <Row label="Goût" value={sel.flavor} />}
           <Row label="Croustillant" value={LABELS[sel.crunchy] ?? sel.crunchy} />
-          <Row label="Fruits"    value={sel.fruits.map(f => LABELS[f] ?? f).join(", ")} />
+          <Row label="Fruits"    value={sel.fruits.map(f => f === "autre" && sel.customFruit ? sel.customFruit : (LABELS[f] ?? f)).join(", ")} />
           {lipidesChoix.length > 0 && (
             <Row label="Lipides" value={lipidesChoix.join(", ")} />
           )}
