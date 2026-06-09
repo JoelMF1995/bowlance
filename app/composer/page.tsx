@@ -53,35 +53,39 @@ const BONUSES = [
   { id: "chia",      label: "Graines de chia",      kcal: 50, prot: 2, gluc: 4, lip: 3 },
 ];
 
-const RECOMMENDED: Record<string, {
-  title: string;
-  description: string;
+interface MonthlyBowl {
+  week: string;
+  name: string;
   items: string[];
   kcal: number;
   prot: number;
-}> = {
-  poids: {
-    title: "Le bowl Perte de poids",
-    description: "Rassasiant et riche en protéines, pour tenir sans frustration.",
-    items: ["Skyr nature", "Vanille", "Granola maison", "Fraises", "Myrtilles"],
-    kcal: 320,
-    prot: 28,
-  },
-  muscle: {
-    title: "Le bowl Prise de muscle",
-    description: "Complet et énergisant, pour soutenir tes efforts.",
-    items: ["Skyr gourmand", "Chocolat", "Muesli croustillant", "Banane", "Beurre de cacahuète"],
-    kcal: 520,
-    prot: 35,
-  },
-  mieux: {
-    title: "Le bowl Manger mieux",
-    description: "Équilibré et gourmand, pour bien commencer la journée.",
-    items: ["Skyr fruité", "Fruits rouges", "Noix de coco", "Framboises", "Graines de chia"],
-    kcal: 380,
-    prot: 24,
-  },
+}
+
+const MONTHLY_BOWLS: Record<string, MonthlyBowl[]> = {
+  poids: [
+    { week: "Semaine 1", name: "Le Léger",        items: ["Skyr nature", "Vanille", "Granola maison", "Fraises", "Myrtilles"], kcal: 320, prot: 28 },
+    { week: "Semaine 2", name: "Le Détox",        items: ["Skyr nature", "Fruits rouges", "Noix de coco", "Framboises", "Graines de chia"], kcal: 290, prot: 26 },
+    { week: "Semaine 3", name: "Le Fruité Mince", items: ["Skyr fruité", "Mangue", "Muesli croustillant", "Kiwi", "Graines de courge"], kcal: 310, prot: 25 },
+    { week: "Semaine 4", name: "Le Rassasiant",   items: ["Skyr nature", "Caramel", "Granola maison", "Banane", "Graines de chia"], kcal: 340, prot: 27 },
+  ],
+  muscle: [
+    { week: "Semaine 1", name: "Le Powerhouse", items: ["Skyr gourmand", "Chocolat", "Muesli croustillant", "Banane", "Beurre de cacahuète"], kcal: 520, prot: 35 },
+    { week: "Semaine 2", name: "Le Builder",    items: ["Skyr nature", "Vanille", "Granola maison", "Banane", "Fruits secs", "Beurre de cacahuète"], kcal: 490, prot: 33 },
+    { week: "Semaine 3", name: "Le Masse",      items: ["Skyr gourmand", "Caramel", "Muesli croustillant", "Mangue", "Chocolat noir", "Fruits secs"], kcal: 540, prot: 32 },
+    { week: "Semaine 4", name: "Le Complet",    items: ["Skyr fruité", "Fruits rouges", "Noix de coco", "Fraises", "Graines de chia", "Beurre de cacahuète"], kcal: 480, prot: 34 },
+  ],
+  mieux: [
+    { week: "Semaine 1", name: "L'Équilibré", items: ["Skyr fruité", "Fruits rouges", "Noix de coco", "Framboises", "Graines de chia"], kcal: 380, prot: 24 },
+    { week: "Semaine 2", name: "Le Doux",     items: ["Skyr gourmand", "Vanille", "Granola maison", "Fraises", "Chocolat noir"], kcal: 400, prot: 22 },
+    { week: "Semaine 3", name: "Le Tropical", items: ["Skyr fruité", "Mangue", "Noix de coco", "Kiwi", "Graines de courge"], kcal: 370, prot: 23 },
+    { week: "Semaine 4", name: "Le Classique",items: ["Skyr nature", "Caramel", "Muesli croustillant", "Myrtilles", "Fruits secs"], kcal: 390, prot: 24 },
+  ],
 };
+
+const MONTH_NAMES = [
+  "janvier", "février", "mars", "avril", "mai", "juin",
+  "juillet", "août", "septembre", "octobre", "novembre", "décembre",
+];
 
 // ── Types & helpers ───────────────────────────────────────────────────────────
 
@@ -195,14 +199,14 @@ export default function ComposerPage() {
     }
   }
 
-  function handleOrderRecommended() {
-    const r = RECOMMENDED[sel.objective];
+  function handleSubscribe() {
+    const bowls = MONTHLY_BOWLS[sel.objective];
+    const monthName = MONTH_NAMES[new Date().getMonth()];
     localStorage.setItem("bowlance_bowl", JSON.stringify({
-      recommended: true,
+      subscription: true,
       objective: sel.objective,
-      title: r.title,
-      items: r.items,
-      macros: { kcal: r.kcal, prot: r.prot, gluc: 0, lip: 0 },
+      month: monthName,
+      bowls,
     }));
     router.push("/composer/recapitulatif");
   }
@@ -412,11 +416,15 @@ export default function ComposerPage() {
   // ── Render ──────────────────────────────────────────────────────────────────
 
   if (showRecommended) {
-    const r = RECOMMENDED[sel.objective];
+    const bowls = MONTHLY_BOWLS[sel.objective];
+    const monthName = MONTH_NAMES[new Date().getMonth()];
+    const avgKcal = Math.round(bowls.reduce((s, b) => s + b.kcal, 0) / bowls.length);
+    const avgProt = Math.round(bowls.reduce((s, b) => s + b.prot, 0) / bowls.length);
+
     return (
       <div className="min-h-screen bg-cream flex flex-col">
         <header className="sticky top-0 z-50 bg-offwhite border-b border-brown/10 shadow-sm">
-          <div className="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
             <Link href="/" className="font-display text-xl font-bold text-brown">Bowlance</Link>
             <button
               onClick={() => setSel(p => ({ ...p, mode: "" }))}
@@ -427,51 +435,76 @@ export default function ComposerPage() {
           </div>
         </header>
 
-        <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-16 flex flex-col items-center text-center gap-8">
-          <div>
-            <p className="font-body text-xs text-brown/40 uppercase tracking-widest mb-2">
-              Notre recommandation
-            </p>
-            <h1 className="font-display text-4xl md:text-5xl font-bold text-brown">
-              {r.title}
+        <main className="flex-1 max-w-5xl mx-auto w-full px-6 py-16 flex flex-col gap-12">
+
+          {/* Bandeau */}
+          <div className="text-center">
+            <h1 className="font-display text-4xl md:text-5xl font-bold text-brown capitalize">
+              Tes 4 bowls de {monthName}
             </h1>
-            <p className="font-body text-brown/60 mt-3 max-w-md mx-auto">
-              {r.description}
+            <p className="font-body text-brown/60 mt-3 max-w-xl mx-auto">
+              Avec ton abonnement, tu reçois 1 bowl par semaine. Ce mois-ci, on a
+              sélectionné ces 4 bowls pour toi selon ton objectif.
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-sage/20 px-8 py-6 w-full max-w-md">
-            <ul className="flex flex-col gap-3">
-              {r.items.map(item => (
-                <li key={item} className="font-body text-brown flex items-center gap-3">
-                  <span className="w-2 h-2 rounded-full bg-terracotta shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
+          {/* 4 cartes bowls */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {bowls.map(b => (
+              <div
+                key={b.week}
+                className="relative bg-white rounded-2xl shadow-sm border border-sage/20 p-6 flex flex-col gap-3"
+              >
+                <span className="self-start bg-terracotta text-white text-xs font-body font-semibold px-4 py-1 rounded-full">
+                  {b.week}
+                </span>
+                <p className="font-display text-2xl font-bold text-brown">{b.name}</p>
+                <ul className="flex flex-col gap-1.5">
+                  {b.items.map(item => (
+                    <li key={item} className="font-body text-sm text-brown/60 flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-sage shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <div className="flex gap-6 mt-2 pt-3 border-t border-brown/10">
+                  <div>
+                    <p className="font-display text-xl font-bold text-terracotta">{b.kcal} <span className="text-sm font-normal text-brown/40">kcal</span></p>
+                  </div>
+                  <div>
+                    <p className="font-display text-xl font-bold text-terracotta">{b.prot}g <span className="text-sm font-normal text-brown/40">protéines</span></p>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
 
-          <div className="bg-terracotta rounded-2xl px-8 py-6 w-full max-w-md grid grid-cols-2 gap-6 text-center">
-            <div>
-              <p className="font-display text-3xl font-bold text-white">
-                {r.kcal}<span className="text-lg font-normal ml-1 opacity-75">kcal</span>
-              </p>
-              <p className="font-body text-xs text-white/60 uppercase tracking-wider mt-1">Calories</p>
+          {/* Récap abonnement */}
+          <div className="bg-terracotta rounded-2xl px-8 py-8 flex flex-col items-center text-center gap-5">
+            <p className="font-display text-2xl font-bold text-white">
+              📦 Ton abonnement {monthName} — 4 bowls · 1 par semaine
+            </p>
+            <div className="flex gap-10">
+              <div>
+                <p className="font-display text-3xl font-bold text-white">
+                  {avgKcal}<span className="text-lg font-normal ml-1 opacity-75">kcal</span>
+                </p>
+                <p className="font-body text-xs text-white/60 uppercase tracking-wider mt-1">Moyenne / bowl</p>
+              </div>
+              <div>
+                <p className="font-display text-3xl font-bold text-white">
+                  {avgProt}<span className="text-lg font-normal ml-1 opacity-75">g</span>
+                </p>
+                <p className="font-body text-xs text-white/60 uppercase tracking-wider mt-1">Protéines moy.</p>
+              </div>
             </div>
-            <div>
-              <p className="font-display text-3xl font-bold text-white">
-                {r.prot}<span className="text-lg font-normal ml-1 opacity-75">g</span>
-              </p>
-              <p className="font-body text-xs text-white/60 uppercase tracking-wider mt-1">Protéines</p>
-            </div>
+            <button
+              onClick={handleSubscribe}
+              className="inline-flex items-center justify-center px-10 py-4 rounded-full bg-white text-brown font-body font-semibold text-lg hover:bg-white/85 transition-colors duration-200 shadow-sm"
+            >
+              S&apos;abonner pour {monthName} →
+            </button>
           </div>
-
-          <button
-            onClick={handleOrderRecommended}
-            className="inline-flex items-center justify-center px-10 py-4 rounded-full bg-terracotta text-white font-body font-semibold text-lg hover:bg-[#a85d49] transition-colors duration-200 shadow-sm"
-          >
-            Commander ce bowl
-          </button>
         </main>
       </div>
     );
