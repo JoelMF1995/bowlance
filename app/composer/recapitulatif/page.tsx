@@ -11,38 +11,41 @@ interface MonthlyBowl {
   prot: number;
 }
 
+interface Sel {
+  objective: string;
+  mode: string;
+  skyr: string;
+  flavor: string;
+  crunchy: string;
+  fruits: string[];
+  driedFruits: boolean | null;
+  darkChoco: boolean | null;
+}
+
 interface BowlData {
   subscription?: boolean;
   month?: string;
   bowls?: MonthlyBowl[];
-  sel?: {
-    objective: string;
-    skyr: string;
-    flavor: string;
-    crunchy: string;
-    fruits: string[];
-    bonus: string[];
-  };
-  macros?: {
-    kcal: number;
-    prot: number;
-    gluc: number;
-    lip: number;
-  };
+  sel?: Sel;
 }
 
 const LABELS: Record<string, string> = {
   // objectives
   poids: "Perdre du poids", muscle: "Prendre du muscle", mieux: "Manger mieux",
   // skyrs
-  nature: "Nature", gourmand: "Gourmand", fruite: "Fruité",
+  nature: "Nature", gourmande: "Gourmande", fruite: "Fruité",
   // crunchies
-  granola: "Granola maison", muesli: "Muesli croustillant", coco: "Noix de coco torréfiée", courge: "Graines de courge",
+  avoine: "Flocons d'avoines", granola_pm: "Granola pomme-myrtilles", granola_choco: "Granola chocolat",
   // fruits
-  fraises: "Fraises", myrtilles: "Myrtilles", banane: "Banane", mangue: "Mangue", framboises: "Framboises", kiwi: "Kiwi",
-  // bonus
-  chocolat: "Chocolat noir 70%", cacahuete: "Beurre de cacahuète", fruitsecs: "Fruits secs", chia: "Graines de chia",
+  pomme: "Pomme", myrtille: "Myrtille", framboise: "Framboise", fraise: "Fraise", autre: "Autre",
 };
+
+const COMPARISONS = [
+  { name: "Croissant + jus d'orange", kcal: "360-370 kcal" },
+  { name: "Pain au chocolat", kcal: "300-340 kcal" },
+  { name: "2 tartines pâte à tartiner", kcal: "350-400 kcal" },
+  { name: "Céréales sucrées avec lait", kcal: "350-420 kcal" },
+];
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
@@ -72,7 +75,7 @@ export default function RecapPage() {
     );
   }
 
-  const { sel, macros, subscription, month, bowls } = data;
+  const { sel, subscription, month, bowls } = data;
 
   // ── Subscription view (4 bowls / month) ──────────────────────────────────
   if (subscription && bowls) {
@@ -161,7 +164,7 @@ export default function RecapPage() {
   }
 
   // ── Custom bowl view ──────────────────────────────────────────────────────
-  if (!sel || !macros) {
+  if (!sel) {
     return (
       <div className="min-h-screen bg-cream flex flex-col items-center justify-center gap-6">
         <p className="font-body text-brown/60">Aucun bowl composé.</p>
@@ -171,6 +174,10 @@ export default function RecapPage() {
       </div>
     );
   }
+
+  const lipidesChoix: string[] = [];
+  if (sel.driedFruits) lipidesChoix.push("Fruits secs");
+  if (sel.darkChoco) lipidesChoix.push("Chocolat noir");
 
   return (
     <div className="min-h-screen bg-cream">
@@ -199,43 +206,51 @@ export default function RecapPage() {
         <div className="bg-white rounded-2xl shadow-sm border border-sage/20 px-8 py-4">
           <Row label="Objectif"  value={LABELS[sel.objective] ?? sel.objective} />
           <Row label="Skyr"      value={LABELS[sel.skyr] ?? sel.skyr} />
-          <Row label="Parfum"    value={sel.flavor} />
+          {sel.flavor && <Row label="Goût" value={sel.flavor} />}
           <Row label="Croustillant" value={LABELS[sel.crunchy] ?? sel.crunchy} />
           <Row label="Fruits"    value={sel.fruits.map(f => LABELS[f] ?? f).join(", ")} />
-          {sel.bonus.length > 0 && (
-            <Row label="Bonus" value={sel.bonus.map(b => LABELS[b] ?? b).join(", ")} />
+          {lipidesChoix.length > 0 && (
+            <Row label="Lipides" value={lipidesChoix.join(", ")} />
           )}
         </div>
 
-        {/* Macros */}
-        <div className="bg-terracotta rounded-2xl px-8 py-6">
-          <p className="font-body text-xs text-white/60 uppercase tracking-widest mb-5 text-center">
-            Valeurs nutritionnelles
+        {/* Conclusion */}
+        <div className="bg-terracotta rounded-2xl px-8 py-8 flex flex-col gap-4">
+          <p className="font-display text-2xl font-bold text-white text-center">
+            ~320 à 355 kcal
           </p>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
-            {[
-              { label: "Calories",  val: `${macros.kcal}`, unit: "kcal" },
-              { label: "Protéines", val: `${macros.prot}`, unit: "g" },
-              { label: "Glucides",  val: `${macros.gluc}`, unit: "g" },
-              { label: "Lipides",   val: `${macros.lip}`,  unit: "g" },
-            ].map(m => (
-              <div key={m.label}>
-                <p className="font-display text-3xl font-bold text-white">
-                  {m.val}<span className="text-lg font-normal ml-1 opacity-75">{m.unit}</span>
-                </p>
-                <p className="font-body text-xs text-white/60 uppercase tracking-wider mt-1">{m.label}</p>
+          <p className="font-body text-sm text-white/85 leading-relaxed">
+            Ton bowl représente environ 320 à 355 kcal selon les ingrédients choisis.
+            La vraie différence, ce n&apos;est pas seulement le nombre de calories.
+            Ton bowl apporte des protéines (Skyr), des glucides (avoine et fruits)
+            et des lipides (fruits secs ou chocolat noir). Ce mélange est plus
+            équilibré et plus rassasiant — ce qui aide à tenir la matinée sans
+            coup de fatigue ni fringale.
+          </p>
+        </div>
+
+        {/* Comparison table */}
+        <div className="bg-white rounded-2xl shadow-sm border border-sage/20 px-8 py-6">
+          <p className="font-body text-xs text-brown/40 uppercase tracking-widest mb-4 text-center">
+            Comparé à un petit-déjeuner classique
+          </p>
+          <div className="flex flex-col">
+            {COMPARISONS.map(c => (
+              <div key={c.name} className="flex items-baseline justify-between py-3 border-b border-brown/10 last:border-b-0">
+                <p className="font-body text-sm text-brown/70">{c.name}</p>
+                <p className="font-body font-medium text-brown text-right ml-4">{c.kcal}</p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* CTAs */}
+        {/* CTA */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/commander"
             className="inline-flex items-center justify-center px-10 py-4 rounded-full bg-terracotta text-white font-body font-semibold text-lg hover:bg-[#a85d49] transition-colors duration-200 shadow-sm"
           >
-            Commander ce bowl
+            S&apos;abonner pour recevoir ce bowl chaque semaine →
           </Link>
           <Link
             href="/composer"
