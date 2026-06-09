@@ -85,6 +85,8 @@ export default function RecapPage() {
   if (subscription && bowls) {
     const avgKcal = Math.round(bowls.reduce((s, b) => s + b.kcal, 0) / bowls.length);
     const avgProt = Math.round(bowls.reduce((s, b) => s + b.prot, 0) / bowls.length);
+    const avgGluc = Math.round(bowls.reduce((s, b) => s + b.gluc, 0) / bowls.length);
+    const avgLip = Math.round(bowls.reduce((s, b) => s + b.lip, 0) / bowls.length);
     const avgFibres = Math.round(bowls.reduce((s, b) => s + b.fibres, 0) / bowls.length);
 
     return (
@@ -124,6 +126,8 @@ export default function RecapPage() {
                 <div className="flex flex-wrap gap-x-6 gap-y-2 mt-2 pt-3 border-t border-brown/10">
                   <p className="font-display text-xl font-bold text-terracotta">{b.kcal} <span className="text-sm font-normal text-brown/40">kcal</span></p>
                   <p className="font-display text-xl font-bold text-terracotta">{b.prot}g <span className="text-sm font-normal text-brown/40">protéines</span></p>
+                  <p className="font-display text-xl font-bold text-terracotta">🌾 {b.gluc}g <span className="text-sm font-normal text-brown/40">glucides</span></p>
+                  <p className="font-display text-xl font-bold text-terracotta">🥑 {b.lip}g <span className="text-sm font-normal text-brown/40">lipides</span></p>
                   <p className="font-display text-xl font-bold text-terracotta">🌿 {b.fibres}g <span className="text-sm font-normal text-brown/40">fibres</span></p>
                 </div>
               </div>
@@ -134,7 +138,7 @@ export default function RecapPage() {
             <p className="font-body text-xs text-white/60 uppercase tracking-widest mb-5 text-center">
               Moyenne par bowl
             </p>
-            <div className="grid grid-cols-3 gap-6 text-center max-w-md mx-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-6 text-center max-w-2xl mx-auto">
               <div>
                 <p className="font-display text-3xl font-bold text-white">
                   {avgKcal}<span className="text-lg font-normal ml-1 opacity-75">kcal</span>
@@ -146,6 +150,18 @@ export default function RecapPage() {
                   {avgProt}<span className="text-lg font-normal ml-1 opacity-75">g</span>
                 </p>
                 <p className="font-body text-xs text-white/60 uppercase tracking-wider mt-1">Protéines</p>
+              </div>
+              <div>
+                <p className="font-display text-3xl font-bold text-white">
+                  🌾 {avgGluc}<span className="text-lg font-normal ml-1 opacity-75">g</span>
+                </p>
+                <p className="font-body text-xs text-white/60 uppercase tracking-wider mt-1">Glucides moy.</p>
+              </div>
+              <div>
+                <p className="font-display text-3xl font-bold text-white">
+                  🥑 {avgLip}<span className="text-lg font-normal ml-1 opacity-75">g</span>
+                </p>
+                <p className="font-body text-xs text-white/60 uppercase tracking-wider mt-1">Lipides moy.</p>
               </div>
               <div>
                 <p className="font-display text-3xl font-bold text-white">

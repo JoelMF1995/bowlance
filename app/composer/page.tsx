@@ -452,6 +452,8 @@ export default function ComposerPage() {
     const monthName = MONTH_NAMES[new Date().getMonth()];
     const avgKcal = Math.round(bowls.reduce((s, b) => s + b.kcal, 0) / bowls.length);
     const avgProt = Math.round(bowls.reduce((s, b) => s + b.prot, 0) / bowls.length);
+    const avgGluc = Math.round(bowls.reduce((s, b) => s + b.gluc, 0) / bowls.length);
+    const avgLip = Math.round(bowls.reduce((s, b) => s + b.lip, 0) / bowls.length);
     const avgFibres = Math.round(bowls.reduce((s, b) => s + b.fibres, 0) / bowls.length);
 
     return (
@@ -508,6 +510,12 @@ export default function ComposerPage() {
                     <p className="font-display text-xl font-bold text-terracotta">{b.prot}g <span className="text-sm font-normal text-brown/40">protéines</span></p>
                   </div>
                   <div>
+                    <p className="font-display text-xl font-bold text-terracotta">🌾 {b.gluc}g <span className="text-sm font-normal text-brown/40">glucides</span></p>
+                  </div>
+                  <div>
+                    <p className="font-display text-xl font-bold text-terracotta">🥑 {b.lip}g <span className="text-sm font-normal text-brown/40">lipides</span></p>
+                  </div>
+                  <div>
                     <p className="font-display text-xl font-bold text-terracotta">🌿 {b.fibres}g <span className="text-sm font-normal text-brown/40">fibres</span></p>
                   </div>
                 </div>
@@ -532,6 +540,18 @@ export default function ComposerPage() {
                   {avgProt}<span className="text-lg font-normal ml-1 opacity-75">g</span>
                 </p>
                 <p className="font-body text-xs text-white/60 uppercase tracking-wider mt-1">Protéines moy.</p>
+              </div>
+              <div>
+                <p className="font-display text-3xl font-bold text-white">
+                  🌾 {avgGluc}<span className="text-lg font-normal ml-1 opacity-75">g</span>
+                </p>
+                <p className="font-body text-xs text-white/60 uppercase tracking-wider mt-1">Glucides moy.</p>
+              </div>
+              <div>
+                <p className="font-display text-3xl font-bold text-white">
+                  🥑 {avgLip}<span className="text-lg font-normal ml-1 opacity-75">g</span>
+                </p>
+                <p className="font-body text-xs text-white/60 uppercase tracking-wider mt-1">Lipides moy.</p>
               </div>
               <div>
                 <p className="font-display text-3xl font-bold text-white">
