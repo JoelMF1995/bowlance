@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 interface BowlData {
-  sel: {
+  recommended?: boolean;
+  title?: string;
+  items?: string[];
+  sel?: {
     objective: string;
     skyr: string;
     flavor: string;
@@ -61,7 +64,7 @@ export default function RecapPage() {
     );
   }
 
-  const { sel, macros } = data;
+  const { sel, macros, recommended, title, items } = data;
 
   return (
     <div className="min-h-screen bg-cream">
@@ -87,16 +90,30 @@ export default function RecapPage() {
         </div>
 
         {/* Selections */}
-        <div className="bg-white rounded-2xl shadow-sm border border-sage/20 px-8 py-4">
-          <Row label="Objectif"  value={LABELS[sel.objective] ?? sel.objective} />
-          <Row label="Skyr"      value={LABELS[sel.skyr] ?? sel.skyr} />
-          <Row label="Parfum"    value={sel.flavor} />
-          <Row label="Croustillant" value={LABELS[sel.crunchy] ?? sel.crunchy} />
-          <Row label="Fruits"    value={sel.fruits.map(f => LABELS[f] ?? f).join(", ")} />
-          {sel.bonus.length > 0 && (
-            <Row label="Bonus" value={sel.bonus.map(b => LABELS[b] ?? b).join(", ")} />
-          )}
-        </div>
+        {recommended ? (
+          <div className="bg-white rounded-2xl shadow-sm border border-sage/20 px-8 py-6">
+            <p className="font-display text-xl font-bold text-brown mb-4">{title}</p>
+            <ul className="flex flex-col gap-3">
+              {(items ?? []).map(item => (
+                <li key={item} className="font-body text-brown flex items-center gap-3">
+                  <span className="w-2 h-2 rounded-full bg-terracotta shrink-0" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : sel ? (
+          <div className="bg-white rounded-2xl shadow-sm border border-sage/20 px-8 py-4">
+            <Row label="Objectif"  value={LABELS[sel.objective] ?? sel.objective} />
+            <Row label="Skyr"      value={LABELS[sel.skyr] ?? sel.skyr} />
+            <Row label="Parfum"    value={sel.flavor} />
+            <Row label="Croustillant" value={LABELS[sel.crunchy] ?? sel.crunchy} />
+            <Row label="Fruits"    value={sel.fruits.map(f => LABELS[f] ?? f).join(", ")} />
+            {sel.bonus.length > 0 && (
+              <Row label="Bonus" value={sel.bonus.map(b => LABELS[b] ?? b).join(", ")} />
+            )}
+          </div>
+        ) : null}
 
         {/* Macros */}
         <div className="bg-terracotta rounded-2xl px-8 py-6">
@@ -107,8 +124,10 @@ export default function RecapPage() {
             {[
               { label: "Calories",  val: `${macros.kcal}`, unit: "kcal" },
               { label: "Protéines", val: `${macros.prot}`, unit: "g" },
-              { label: "Glucides",  val: `${macros.gluc}`, unit: "g" },
-              { label: "Lipides",   val: `${macros.lip}`,  unit: "g" },
+              ...(recommended ? [] : [
+                { label: "Glucides", val: `${macros.gluc}`, unit: "g" },
+                { label: "Lipides",  val: `${macros.lip}`,  unit: "g" },
+              ]),
             ].map(m => (
               <div key={m.label}>
                 <p className="font-display text-3xl font-bold text-white">

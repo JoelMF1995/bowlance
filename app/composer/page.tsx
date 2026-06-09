@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 
 const STEPS = [
   "Ton objectif",
+  "Ton parcours",
   "Ton skyr",
   "Le goût",
   "Topping croustillant",
@@ -52,10 +53,41 @@ const BONUSES = [
   { id: "chia",      label: "Graines de chia",      kcal: 50, prot: 2, gluc: 4, lip: 3 },
 ];
 
+const RECOMMENDED: Record<string, {
+  title: string;
+  description: string;
+  items: string[];
+  kcal: number;
+  prot: number;
+}> = {
+  poids: {
+    title: "Le bowl Perte de poids",
+    description: "Rassasiant et riche en protéines, pour tenir sans frustration.",
+    items: ["Skyr nature", "Vanille", "Granola maison", "Fraises", "Myrtilles"],
+    kcal: 320,
+    prot: 28,
+  },
+  muscle: {
+    title: "Le bowl Prise de muscle",
+    description: "Complet et énergisant, pour soutenir tes efforts.",
+    items: ["Skyr gourmand", "Chocolat", "Muesli croustillant", "Banane", "Beurre de cacahuète"],
+    kcal: 520,
+    prot: 35,
+  },
+  mieux: {
+    title: "Le bowl Manger mieux",
+    description: "Équilibré et gourmand, pour bien commencer la journée.",
+    items: ["Skyr fruité", "Fruits rouges", "Noix de coco", "Framboises", "Graines de chia"],
+    kcal: 380,
+    prot: 24,
+  },
+};
+
 // ── Types & helpers ───────────────────────────────────────────────────────────
 
 interface Sel {
   objective: string;
+  mode: string;
   skyr: string;
   flavor: string;
   crunchy: string;
@@ -83,11 +115,12 @@ function computeMacros(sel: Sel) {
 function isComplete(step: number, sel: Sel) {
   switch (step) {
     case 0: return !!sel.objective;
-    case 1: return !!sel.skyr;
-    case 2: return !!sel.flavor;
-    case 3: return !!sel.crunchy;
-    case 4: return sel.fruits.length >= 1;
-    case 5: return true;
+    case 1: return !!sel.mode;
+    case 2: return !!sel.skyr;
+    case 3: return !!sel.flavor;
+    case 4: return !!sel.crunchy;
+    case 5: return sel.fruits.length >= 1;
+    case 6: return true;
     default: return false;
   }
 }
@@ -141,11 +174,12 @@ export default function ComposerPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [sel, setSel] = useState<Sel>({
-    objective: "", skyr: "", flavor: "", crunchy: "", fruits: [], bonus: [],
+    objective: "", mode: "", skyr: "", flavor: "", crunchy: "", fruits: [], bonus: [],
   });
 
   const macros = computeMacros(sel);
   const canNext = isComplete(step, sel);
+  const showRecommended = sel.mode === "guided" && step >= 1;
 
   function goTo(s: number) {
     // Allow going back to any already-visited step
@@ -153,12 +187,24 @@ export default function ComposerPage() {
   }
 
   function handleNext() {
-    if (step < 5) {
+    if (step < 6) {
       setStep(step + 1);
     } else {
       localStorage.setItem("bowlance_bowl", JSON.stringify({ sel, macros }));
       router.push("/composer/recapitulatif");
     }
+  }
+
+  function handleOrderRecommended() {
+    const r = RECOMMENDED[sel.objective];
+    localStorage.setItem("bowlance_bowl", JSON.stringify({
+      recommended: true,
+      objective: sel.objective,
+      title: r.title,
+      items: r.items,
+      macros: { kcal: r.kcal, prot: r.prot, gluc: 0, lip: 0 },
+    }));
+    router.push("/composer/recapitulatif");
   }
 
   function toggleFruit(id: string) {
@@ -206,6 +252,47 @@ export default function ComposerPage() {
         return (
           <div className="flex flex-col gap-4">
             <h2 className="font-display text-3xl font-bold text-brown mb-2">
+              Comment tu veux procéder ?
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <Card
+                selected={sel.mode === "guided"}
+                onClick={() => setSel(p => ({ ...p, mode: "guided" }))}
+                className="relative p-7"
+              >
+                <span className="absolute -top-3 left-6 bg-sage text-white text-xs font-body font-semibold px-4 py-1 rounded-full">
+                  Recommandé
+                </span>
+                <span className="text-4xl">⚡</span>
+                <p className="font-display text-xl font-bold text-brown mt-3">
+                  Je fais confiance à Bowlance
+                </p>
+                <p className="font-body text-sm text-brown/60 mt-2 leading-relaxed">
+                  On te propose le bowl parfait selon ton objectif. Équilibré,
+                  gourmand, prêt en 2 clics.
+                </p>
+              </Card>
+              <Card
+                selected={sel.mode === "custom"}
+                onClick={() => setSel(p => ({ ...p, mode: "custom" }))}
+                className="p-7"
+              >
+                <span className="text-4xl">🎨</span>
+                <p className="font-display text-xl font-bold text-brown mt-3">
+                  Je crée mon bowl
+                </p>
+                <p className="font-body text-sm text-brown/60 mt-2 leading-relaxed">
+                  Tu choisis chaque ingrédient étape par étape. Tu contrôles tout.
+                </p>
+              </Card>
+            </div>
+          </div>
+        );
+
+      case 2:
+        return (
+          <div className="flex flex-col gap-4">
+            <h2 className="font-display text-3xl font-bold text-brown mb-2">
               Choisis ton style de skyr
             </h2>
             {SKYRS.map(s => (
@@ -225,7 +312,7 @@ export default function ComposerPage() {
           </div>
         );
 
-      case 2:
+      case 3:
         return (
           <div className="flex flex-col gap-6">
             <h2 className="font-display text-3xl font-bold text-brown mb-2">
@@ -241,7 +328,7 @@ export default function ComposerPage() {
           </div>
         );
 
-      case 3:
+      case 4:
         return (
           <div className="flex flex-col gap-4">
             <h2 className="font-display text-3xl font-bold text-brown mb-2">
@@ -259,7 +346,7 @@ export default function ComposerPage() {
           </div>
         );
 
-      case 4:
+      case 5:
         return (
           <div className="flex flex-col gap-6">
             <div>
@@ -298,7 +385,7 @@ export default function ComposerPage() {
           </div>
         );
 
-      case 5:
+      case 6:
         return (
           <div className="flex flex-col gap-6">
             <div>
@@ -323,6 +410,72 @@ export default function ComposerPage() {
   }
 
   // ── Render ──────────────────────────────────────────────────────────────────
+
+  if (showRecommended) {
+    const r = RECOMMENDED[sel.objective];
+    return (
+      <div className="min-h-screen bg-cream flex flex-col">
+        <header className="sticky top-0 z-50 bg-offwhite border-b border-brown/10 shadow-sm">
+          <div className="max-w-3xl mx-auto px-6 h-16 flex items-center justify-between">
+            <Link href="/" className="font-display text-xl font-bold text-brown">Bowlance</Link>
+            <button
+              onClick={() => setSel(p => ({ ...p, mode: "" }))}
+              className="font-body text-sm text-brown/50 hover:text-brown transition-colors"
+            >
+              ← Changer de parcours
+            </button>
+          </div>
+        </header>
+
+        <main className="flex-1 max-w-3xl mx-auto w-full px-6 py-16 flex flex-col items-center text-center gap-8">
+          <div>
+            <p className="font-body text-xs text-brown/40 uppercase tracking-widest mb-2">
+              Notre recommandation
+            </p>
+            <h1 className="font-display text-4xl md:text-5xl font-bold text-brown">
+              {r.title}
+            </h1>
+            <p className="font-body text-brown/60 mt-3 max-w-md mx-auto">
+              {r.description}
+            </p>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-sm border border-sage/20 px-8 py-6 w-full max-w-md">
+            <ul className="flex flex-col gap-3">
+              {r.items.map(item => (
+                <li key={item} className="font-body text-brown flex items-center gap-3">
+                  <span className="w-2 h-2 rounded-full bg-terracotta shrink-0" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="bg-terracotta rounded-2xl px-8 py-6 w-full max-w-md grid grid-cols-2 gap-6 text-center">
+            <div>
+              <p className="font-display text-3xl font-bold text-white">
+                {r.kcal}<span className="text-lg font-normal ml-1 opacity-75">kcal</span>
+              </p>
+              <p className="font-body text-xs text-white/60 uppercase tracking-wider mt-1">Calories</p>
+            </div>
+            <div>
+              <p className="font-display text-3xl font-bold text-white">
+                {r.prot}<span className="text-lg font-normal ml-1 opacity-75">g</span>
+              </p>
+              <p className="font-body text-xs text-white/60 uppercase tracking-wider mt-1">Protéines</p>
+            </div>
+          </div>
+
+          <button
+            onClick={handleOrderRecommended}
+            className="inline-flex items-center justify-center px-10 py-4 rounded-full bg-terracotta text-white font-body font-semibold text-lg hover:bg-[#a85d49] transition-colors duration-200 shadow-sm"
+          >
+            Commander ce bowl
+          </button>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-cream flex flex-col">
@@ -437,7 +590,7 @@ export default function ComposerPage() {
                 : "bg-brown/10 text-brown/30 cursor-not-allowed",
             ].join(" ")}
           >
-            {step < 5 ? "Suivant →" : "Voir mon bowl →"}
+            {step < 6 ? "Suivant →" : "Voir mon bowl →"}
           </button>
         </div>
       </div>
