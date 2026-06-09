@@ -42,7 +42,7 @@ const CRUNCHIES = [
 ];
 
 const FRUITS = [
-  { id: "pomme",     label: "Pomme",     emoji: "🍎", img: null },
+  { id: "pomme",     label: "Pomme",     emoji: "🍎", img: "/images/matheus-cenali-wXuzS9xR49M-unsplash.jpg" },
   { id: "myrtille",  label: "Myrtille",  emoji: "🫐", img: "/images/melissa-belanger-usE0kpV_yLo-unsplash.jpg" },
   { id: "framboise", label: "Framboise", emoji: "🍇", img: "/images/anastasia-radio-RtTs9ytyZLg-unsplash.jpg" },
   { id: "fraise",    label: "Fraise",    emoji: "🍓", img: "/images/merve-aydin-bULD0lNVXOA-unsplash.jpg" },
