@@ -42,11 +42,11 @@ const CRUNCHIES = [
 ];
 
 const FRUITS = [
-  { id: "pomme",     label: "Pomme",     emoji: "🍎" },
-  { id: "myrtille",  label: "Myrtille",  emoji: "🫐" },
-  { id: "framboise", label: "Framboise", emoji: "🍇" },
-  { id: "fraise",    label: "Fraise",    emoji: "🍓" },
-  { id: "autre",     label: "Autre",     emoji: "✨" },
+  { id: "pomme",     label: "Pomme",     emoji: "🍎", img: null },
+  { id: "myrtille",  label: "Myrtille",  emoji: "🫐", img: "/images/melissa-belanger-usE0kpV_yLo-unsplash.jpg" },
+  { id: "framboise", label: "Framboise", emoji: "🍇", img: "/images/anastasia-radio-RtTs9ytyZLg-unsplash.jpg" },
+  { id: "fraise",    label: "Fraise",    emoji: "🍓", img: "/images/merve-aydin-bULD0lNVXOA-unsplash.jpg" },
+  { id: "autre",     label: "Autre",     emoji: "✨", img: null },
 ];
 
 interface MonthlyBowl {
@@ -382,13 +382,17 @@ export default function ComposerPage() {
                     key={f.id}
                     onClick={() => toggleFruit(f.id)}
                     className={[
-                      "rounded-2xl border-2 p-5 flex flex-col items-center gap-2 transition-all duration-200 cursor-pointer",
+                      "rounded-2xl border-2 p-5 flex flex-col items-center gap-2 transition-all duration-200 cursor-pointer overflow-hidden",
                       selected
                         ? "border-terracotta bg-cream shadow-md"
                         : "border-sage/20 bg-white hover:border-sage/50 hover:shadow-md",
                     ].join(" ")}
                   >
-                    <span className="text-3xl">{f.emoji}</span>
+                    {f.img ? (
+                      <img src={f.img} alt={f.label} className="w-16 h-16 object-cover rounded-full" />
+                    ) : (
+                      <span className="text-3xl">{f.emoji}</span>
+                    )}
                     <p className="font-display font-bold text-brown text-base">{f.label}</p>
                   </button>
                 );
