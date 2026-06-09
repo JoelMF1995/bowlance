@@ -36,9 +36,9 @@ const GOURMANDE_FLAVORS = [
 const FRUITE_FLAVORS = ["Banane", "Myrtille", "Cerise", "Fraise"];
 
 const CRUNCHIES = [
-  { id: "avoine",        label: "Flocons d'avoines" },
-  { id: "granola_pm",    label: "Granola pomme-myrtilles" },
-  { id: "granola_choco", label: "Granola chocolat" },
+  { id: "avoine",        label: "Flocons d'avoines",         img: "/images/lukasz-rawa-HB_MVtHVMLc-unsplash.jpg" },
+  { id: "granola_pm",    label: "Granola pomme-myrtilles",   img: "/images/cruesli_pommes_cerises.png" },
+  { id: "granola_choco", label: "Granola chocolat",          img: "/images/heather-barnes-hMGFMk1rT48-unsplash.jpg" },
 ];
 
 const FRUITS = [
@@ -358,8 +358,9 @@ export default function ComposerPage() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {CRUNCHIES.map(c => (
-                <Card key={c.id} selected={sel.crunchy === c.id} onClick={() => setSel(p => ({ ...p, crunchy: c.id }))}>
-                  <p className="font-display text-lg font-bold text-brown">{c.label}</p>
+                <Card key={c.id} selected={sel.crunchy === c.id} onClick={() => setSel(p => ({ ...p, crunchy: c.id }))} className="overflow-hidden p-0">
+                  <img src={c.img} alt={c.label} className="w-full h-32 object-cover" />
+                  <p className="font-display text-lg font-bold text-brown p-4">{c.label}</p>
                 </Card>
               ))}
             </div>
