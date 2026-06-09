@@ -55,26 +55,29 @@ interface MonthlyBowl {
   items: string[];
   kcal: number;
   prot: number;
+  gluc: number;
+  lip: number;
+  fibres: number;
 }
 
 const MONTHLY_BOWLS: Record<string, MonthlyBowl[]> = {
   poids: [
-    { week: "Semaine 1", name: "Le Léger",        items: ["Skyr nature", "Vanille", "Granola maison", "Fraises", "Myrtilles"], kcal: 320, prot: 28 },
-    { week: "Semaine 2", name: "Le Détox",        items: ["Skyr nature", "Fruits rouges", "Noix de coco", "Framboises", "Graines de chia"], kcal: 290, prot: 26 },
-    { week: "Semaine 3", name: "Le Fruité Mince", items: ["Skyr fruité", "Mangue", "Muesli croustillant", "Kiwi", "Graines de courge"], kcal: 310, prot: 25 },
-    { week: "Semaine 4", name: "Le Rassasiant",   items: ["Skyr nature", "Caramel", "Granola maison", "Banane", "Graines de chia"], kcal: 340, prot: 27 },
+    { week: "Semaine 1", name: "Le Léger",        items: ["Skyr nature", "Vanille", "Granola maison", "Fraises", "Myrtilles"], kcal: 320, prot: 28, gluc: 38, lip: 6, fibres: 5 },
+    { week: "Semaine 2", name: "Le Détox",        items: ["Skyr nature", "Fruits rouges", "Noix de coco", "Framboises", "Graines de chia"], kcal: 290, prot: 26, gluc: 34, lip: 5, fibres: 6 },
+    { week: "Semaine 3", name: "Le Fruité Mince", items: ["Skyr fruité", "Mangue", "Muesli croustillant", "Kiwi", "Graines de courge"], kcal: 310, prot: 25, gluc: 40, lip: 5, fibres: 5 },
+    { week: "Semaine 4", name: "Le Rassasiant",   items: ["Skyr nature", "Caramel", "Granola maison", "Banane", "Graines de chia"], kcal: 340, prot: 27, gluc: 42, lip: 7, fibres: 6 },
   ],
   muscle: [
-    { week: "Semaine 1", name: "Le Powerhouse", items: ["Skyr gourmand", "Chocolat", "Muesli croustillant", "Banane", "Beurre de cacahuète"], kcal: 520, prot: 35 },
-    { week: "Semaine 2", name: "Le Builder",    items: ["Skyr nature", "Vanille", "Granola maison", "Banane", "Fruits secs", "Beurre de cacahuète"], kcal: 490, prot: 33 },
-    { week: "Semaine 3", name: "Le Masse",      items: ["Skyr gourmand", "Caramel", "Muesli croustillant", "Mangue", "Chocolat noir", "Fruits secs"], kcal: 540, prot: 32 },
-    { week: "Semaine 4", name: "Le Complet",    items: ["Skyr fruité", "Fruits rouges", "Noix de coco", "Fraises", "Graines de chia", "Beurre de cacahuète"], kcal: 480, prot: 34 },
+    { week: "Semaine 1", name: "Le Powerhouse", items: ["Skyr gourmand", "Chocolat", "Muesli croustillant", "Banane", "Beurre de cacahuète"], kcal: 520, prot: 35, gluc: 58, lip: 18, fibres: 7 },
+    { week: "Semaine 2", name: "Le Builder",    items: ["Skyr nature", "Vanille", "Granola maison", "Banane", "Fruits secs", "Beurre de cacahuète"], kcal: 490, prot: 33, gluc: 54, lip: 16, fibres: 6 },
+    { week: "Semaine 3", name: "Le Masse",      items: ["Skyr gourmand", "Caramel", "Muesli croustillant", "Mangue", "Chocolat noir", "Fruits secs"], kcal: 540, prot: 32, gluc: 60, lip: 20, fibres: 7 },
+    { week: "Semaine 4", name: "Le Complet",    items: ["Skyr fruité", "Fruits rouges", "Noix de coco", "Fraises", "Graines de chia", "Beurre de cacahuète"], kcal: 480, prot: 34, gluc: 52, lip: 15, fibres: 8 },
   ],
   mieux: [
-    { week: "Semaine 1", name: "L'Équilibré", items: ["Skyr fruité", "Fruits rouges", "Noix de coco", "Framboises", "Graines de chia"], kcal: 380, prot: 24 },
-    { week: "Semaine 2", name: "Le Doux",     items: ["Skyr gourmand", "Vanille", "Granola maison", "Fraises", "Chocolat noir"], kcal: 400, prot: 22 },
-    { week: "Semaine 3", name: "Le Tropical", items: ["Skyr fruité", "Mangue", "Noix de coco", "Kiwi", "Graines de courge"], kcal: 370, prot: 23 },
-    { week: "Semaine 4", name: "Le Classique",items: ["Skyr nature", "Caramel", "Muesli croustillant", "Myrtilles", "Fruits secs"], kcal: 390, prot: 24 },
+    { week: "Semaine 1", name: "L'Équilibré", items: ["Skyr fruité", "Fruits rouges", "Noix de coco", "Framboises", "Graines de chia"], kcal: 380, prot: 24, gluc: 46, lip: 10, fibres: 7 },
+    { week: "Semaine 2", name: "Le Doux",     items: ["Skyr gourmand", "Vanille", "Granola maison", "Fraises", "Chocolat noir"], kcal: 400, prot: 22, gluc: 50, lip: 12, fibres: 5 },
+    { week: "Semaine 3", name: "Le Tropical", items: ["Skyr fruité", "Mangue", "Noix de coco", "Kiwi", "Graines de courge"], kcal: 370, prot: 23, gluc: 44, lip: 11, fibres: 6 },
+    { week: "Semaine 4", name: "Le Classique",items: ["Skyr nature", "Caramel", "Muesli croustillant", "Myrtilles", "Fruits secs"], kcal: 390, prot: 24, gluc: 48, lip: 12, fibres: 6 },
   ],
 };
 
@@ -449,6 +452,7 @@ export default function ComposerPage() {
     const monthName = MONTH_NAMES[new Date().getMonth()];
     const avgKcal = Math.round(bowls.reduce((s, b) => s + b.kcal, 0) / bowls.length);
     const avgProt = Math.round(bowls.reduce((s, b) => s + b.prot, 0) / bowls.length);
+    const avgFibres = Math.round(bowls.reduce((s, b) => s + b.fibres, 0) / bowls.length);
 
     return (
       <div className="min-h-screen bg-cream flex flex-col">
@@ -496,12 +500,15 @@ export default function ComposerPage() {
                     </li>
                   ))}
                 </ul>
-                <div className="flex gap-6 mt-2 pt-3 border-t border-brown/10">
+                <div className="flex flex-wrap gap-x-6 gap-y-2 mt-2 pt-3 border-t border-brown/10">
                   <div>
                     <p className="font-display text-xl font-bold text-terracotta">{b.kcal} <span className="text-sm font-normal text-brown/40">kcal</span></p>
                   </div>
                   <div>
                     <p className="font-display text-xl font-bold text-terracotta">{b.prot}g <span className="text-sm font-normal text-brown/40">protéines</span></p>
+                  </div>
+                  <div>
+                    <p className="font-display text-xl font-bold text-terracotta">🌿 {b.fibres}g <span className="text-sm font-normal text-brown/40">fibres</span></p>
                   </div>
                 </div>
               </div>
@@ -525,6 +532,12 @@ export default function ComposerPage() {
                   {avgProt}<span className="text-lg font-normal ml-1 opacity-75">g</span>
                 </p>
                 <p className="font-body text-xs text-white/60 uppercase tracking-wider mt-1">Protéines moy.</p>
+              </div>
+              <div>
+                <p className="font-display text-3xl font-bold text-white">
+                  🌿 {avgFibres}<span className="text-lg font-normal ml-1 opacity-75">g</span>
+                </p>
+                <p className="font-body text-xs text-white/60 uppercase tracking-wider mt-1">Fibres moy.</p>
               </div>
             </div>
             <button
